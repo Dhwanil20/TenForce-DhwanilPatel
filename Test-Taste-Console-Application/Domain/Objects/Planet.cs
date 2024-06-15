@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Test_Taste_Console_Application.Domain.DataTransferObjects;
 
 namespace Test_Taste_Console_Application.Domain.Objects
@@ -12,7 +13,7 @@ namespace Test_Taste_Console_Application.Domain.Objects
         public ICollection<Moon> Moons { get; set; }
         public float AverageMoonGravity
         {
-            get => 0.0f;
+            get; set;
         }
 
         public Planet(PlanetDto planetDto)
@@ -20,11 +21,19 @@ namespace Test_Taste_Console_Application.Domain.Objects
             Id = planetDto.Id;
             SemiMajorAxis = planetDto.SemiMajorAxis;
             Moons = new Collection<Moon>();
-            if(planetDto.Moons != null)
+            if (planetDto.Moons != null)
             {
                 foreach (MoonDto moonDto in planetDto.Moons)
                 {
                     Moons.Add(new Moon(moonDto));
+                }
+                if (Moons.Count > 0)
+                {
+                    AverageMoonGravity = planetDto.Moons.Average(x => x.gravity);
+                }
+                else
+                {
+                    AverageMoonGravity = 0.0f;
                 }
             }
         }
